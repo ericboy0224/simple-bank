@@ -119,6 +119,6 @@ database: root
 
 [sqlc](https://docs.sqlc.dev/en/stable/tutorials/getting-started-postgresql.html): sqlc generates type-safe code from SQL
 
-- You write queries in SQL.
-- You run sqlc to generate code with type-safe interfaces to those queries.
-- You write application code that calls the generated code.
+- You write queries in SQL
+- You run sqlc to generate code with type-safe interfaces to those queries
+- You write application code that calls the generated code
