@@ -11,18 +11,18 @@ import (
 
 const (
 	dbDriver = "postgres"
-	dbSource = "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
+	dbSource = "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable&pool_max_conns=10"
 )
 
-var testQueries *Queries
+var testStore *Store
 
 func TestMain(m *testing.M) {
-	connPool, err := pgxpool.New(context.Background(), dbSource)
+	testConnPool, err := pgxpool.New(context.Background(), dbSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
 
-	testQueries = New(connPool)
+	testStore = NewStore(testConnPool)
 
 	os.Exit((m.Run()))
 }
