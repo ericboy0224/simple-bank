@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -64,8 +63,6 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
 
-		log.Printf("Starting transfer transaction from account %d to account %d with amount %d", arg.FromAccountID, arg.ToAccountID, arg.Amount)
-
 		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
 			FromAccountID: arg.FromAccountID,
 			ToAccountID:   arg.ToAccountID,
@@ -91,11 +88,17 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
-		// TODO: implement balance
+		result.FromAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			Amount: -arg.Amount,
+			ID:     arg.FromAccountID,
+		})
 
-		log.Printf("Completed transfer transaction from account %d to account %d with amount %d", arg.FromAccountID, arg.ToAccountID, arg.Amount)
+		result.ToAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			Amount: arg.Amount,
+			ID:     arg.ToAccountID,
+		})
 
-		return nil
+		return err
 	})
 
 	return result, err

@@ -111,5 +111,5 @@ func TestTransferTx(t *testing.T) {
 	require.NoError(t, err)
 
 	fmt.Println(">> after:", account1.Balance-int64(n)*amount, updatedAccount1.Balance)
-	fmt.Println(">> after:", account1.Balance+int64(n)*amount, updatedAccount2.Balance)
+	fmt.Println(">> after:", account2.Balance+int64(n)*amount, updatedAccount2.Balance)
 }
